@@ -1570,23 +1570,27 @@ body:not(.home-page) .navbar .hamburger span {
 /* Checkbox Styles */
 .checkbox-group {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.75rem;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 
 .checkbox-group input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    margin-top: 0.25rem;
+    width: 16px;
+    height: 16px;
+    margin-top: 0.2rem;
     accent-color: #007AFF;
+    vertical-align: middle;
 }
 
 .checkbox-group label {
-    font-size: 0.95rem;
+    font-size: 1rem;
     line-height: 1.5;
     margin-bottom: 0;
     cursor: pointer;
+    vertical-align: middle;
+    display: inline;
 }
 
 .checkbox-group a {
@@ -1944,4 +1948,80 @@ body:not(.home-page) .navbar .hamburger span {
     padding: 3rem;
     box-shadow: 0 10px 40px rgba(0, 122, 255, 0.1);
     border: 1px solid rgba(0, 122, 255, 0.1);
+}
+
+/* Restore prominent upload button and upload area styles */
+.upload-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 16px rgba(0, 122, 255, 0.08);
+    cursor: pointer;
+    margin: 0.5rem 0 0.5rem 0;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.upload-btn:hover, .upload-btn:focus {
+    background: linear-gradient(135deg, #5856D6 0%, #007AFF 100%);
+    box-shadow: 0 8px 24px rgba(0, 122, 255, 0.15);
+    transform: translateY(-2px) scale(1.03);
+}
+
+.upload-section {
+    background: #f8f9ff;
+    border-radius: 16px;
+    padding: 2rem;
+    border: 2px dashed rgba(0, 122, 255, 0.15);
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s, background 0.3s;
+}
+.upload-section:hover {
+    border-color: #007AFF;
+    background: #e8f2ff;
+}
+
+.file-upload-area {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.upload-zone {
+    border: 2px dashed #007AFF;
+    border-radius: 12px;
+    padding: 2.5rem 1.5rem;
+    background: rgba(0, 122, 255, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+.upload-zone:hover {
+    background: rgba(0, 122, 255, 0.1);
+    border-color: #5856D6;
+}
+
+/* Custom blue tick for upload document list */
+.upload-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+.upload-info ul li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #424245;
+}
+.upload-info ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0.1rem;
+    color: #007AFF;
+    font-weight: bold;
+    font-size: 1.1rem;
+    line-height: 1;
 } 
