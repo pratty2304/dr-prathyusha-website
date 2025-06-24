@@ -1199,6 +1199,17 @@ body {
         font-weight: 700;
         text-shadow: none;
     }
+
+    .scroll-indicator {
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        margin-top: 2rem;
+    }
+    .hero-image {
+        margin-bottom: 2.5rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1361,6 +1372,14 @@ body {
     .hero-content {
         padding-top: 100px;
     }
+
+    .scroll-indicator {
+        bottom: 10px;
+        margin-top: 1.5rem;
+    }
+    .hero-image {
+        margin-bottom: 2rem;
+    }
 }
 
 @media (max-width: 360px) {
@@ -1445,39 +1464,112 @@ body {
         background-color: #000000;
         color: #ffffff;
     }
-    
-    .nav-menu {
-        background-color: rgba(0, 0, 0, 0.98);
+    .navbar {
+        background: #18181a;
+        border-bottom: 1px solid #222226;
     }
-    
-    .expertise-card,
-    .treatment-card,
-    .contact-form,
-    .contact-item {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    .nav-link {
+        color: #e0e0e0;
     }
-    
-    /* Override form inputs to always be light background with dark text for readability */
+    .nav-link:hover,
+    .nav-link.active {
+        color: #40a9ff;
+    }
+    .nav-logo h2 {
+        color: #40a9ff;
+    }
+    .hamburger span {
+        background: #e0e0e0;
+    }
+    .footer {
+        background: #18181a;
+        color: #e0e0e0;
+    }
+    .footer-section h3,
+    .footer-section h4 {
+        color: #40a9ff;
+    }
+    .footer-section p,
+    .footer-section ul li a {
+        color: #b0b0b0;
+    }
+    .footer-section ul li a:hover {
+        color: #40a9ff;
+    }
+    .hero,
+    .expertise,
+    .treatments,
+    .contact,
+    .reviews-section,
+    .summary-display {
+        background: #101014;
+        color: #e0e0e0;
+    }
+    .hero-title, .hero-subtitle, .hero-description {
+        color: #e0e0e0;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #40a9ff 0%, #5856D6 100%);
+        color: #fff;
+    }
+    .btn-secondary {
+        background: rgba(64, 169, 255, 0.1);
+        color: #40a9ff;
+        border: 2px solid #40a9ff;
+    }
+    .btn-secondary:hover {
+        background: #40a9ff;
+        color: #fff;
+    }
+    .reviews-section h3 {
+        color: #40a9ff;
+        font-weight: 700;
+        text-shadow: none;
+    }
+    .review-item, .empty-reviews {
+        background: #18181a;
+        color: #e0e0e0;
+    }
+    .empty-reviews-icon {
+        color: #40a9ff;
+    }
+    .star {
+        color: #FFD600;
+    }
     .form-group input,
     .form-group select,
     .form-group textarea {
-        background: white !important;
-        border-color: #e5e5e7 !important;
-        color: #1d1d1f !important;
+        background: #222226;
+        color: #e0e0e0;
+        border-color: #333344;
     }
-    
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
-        background: white !important;
-        border-color: #007AFF !important;
-        color: #1d1d1f !important;
+        background: #18181a;
+        color: #fff;
+        border-color: #40a9ff;
     }
-    
-    /* Fix labels to be visible in dark mode */
     .form-group label {
-        color: #ffffff !important;
+        color: #e0e0e0;
+    }
+    .map-item, .map-frame, .contact-item, .expertise-card, .treatment-card {
+        background: #18181a;
+        color: #e0e0e0;
+        border: 1px solid #222226;
+    }
+    .profile-image, .profile-placeholder {
+        background: #222226;
+    }
+    .success-message, .summary-content, .summary-box {
+        background: #18181a !important;
+        color: #e0e0e0 !important;
+    }
+    .success-message h2 {
+        background: linear-gradient(135deg, #40a9ff 0%, #5856D6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 }
 
