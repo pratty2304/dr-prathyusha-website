@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#007AFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Dr Prathyusha">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Second Opinion - Dr Prathyusha | Medical Oncologist</title>
+    <meta name="description" content="Request a second opinion from Dr Prathyusha. Upload your medical reports and get expert consultation for cancer treatment.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><a href="index.html" style="text-decoration: none; color: inherit;">Dr Prathyusha Eaga</a></h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#expertise" class="nav-link">Expertise</a></li>
+                <li><a href="index.html#treatments" class="nav-link">Treatments</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="index.html#contact" class="nav-link">Video Consultation</a></li>
+                <li><a href="second-opinion.html" class="nav-link active">Second Opinion</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero second-opinion-hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Second Opinion</span>
+                </h1>
+                <h2 class="hero-subtitle">Expert Medical Oncology Consultation</h2>
+                <p class="hero-description">
+                    Get a comprehensive second opinion from Dr Prathyusha. Upload your medical reports 
+                    and receive expert guidance for your cancer treatment journey.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Second Opinion Form Section -->
+    <section class="second-opinion-form">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <p class="form-description">Please provide your details and upload relevant medical reports for a comprehensive evaluation</p>
+                </div>
+                
+                <form id="secondOpinionForm" class="second-opinion-form-content">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Personal Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="fullName">Full Name *</label>
+                                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Age *</label>
+                                <input type="number" id="age" name="age" placeholder="Enter your age" min="1" max="120" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sex">Sex *</label>
+                                <select id="sex" name="sex" required>
+                                    <option value="">Select your sex</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Description -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-file-medical"></i> Detailed Description</h3>
+                        <div class="form-group">
+                            <label for="concernDescription">Describe Your Concern in Detail *</label>
+                            <textarea id="concernDescription" name="concernDescription" placeholder="Please provide a detailed description of your medical concern, symptoms, treatment history, and what specific second opinion you are seeking..." rows="6" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- File Upload Section -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-upload"></i> Medical Reports & Documents</h3>
+                        <div class="upload-section">
+                            <div class="upload-info">
+                                <p><strong>Please upload relevant medical reports:</strong></p>
+                                <ul>
+                                    <li>Pathology reports</li>
+                                    <li>Imaging reports (CT, MRI, PET scans)</li>
+                                    <li>Blood test results</li>
+                                    <li>Treatment summaries</li>
+                                    <li>Doctor's notes</li>
+                                </ul>
+                                <p class="upload-note"><i class="fas fa-info-circle"></i> Maximum file size: 10MB per file. Supported formats: PDF, JPG, PNG. <strong>Upload as many files as needed.</strong></p>
+                            </div>
+                            
+                            <div class="file-upload-area">
+                                <div class="upload-zone" id="uploadZone">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <h4>Drag & Drop files here</h4>
+                                    <p>or</p>
+                                    <button type="button" id="uploadBtn" class="upload-btn">Choose Multiple Files</button>
+                                    <input type="file" id="fileInput" name="medicalReports" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                                    
+                                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                                        <i class="fas fa-info-circle"></i> 
+                                        Hold Ctrl (or Cmd on Mac) to select multiple files at once. <strong>No limit on number of files.</strong>
+                                    </p>
+                                </div>
+                                <div class="file-list" id="fileList">
+                                    <!-- Uploaded files will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-section">
+                        <div class="submit-section">
+                            <button type="submit" class="btn btn-primary submit-btn">
+                                <i class="fas fa-paper-plane"></i>
+                                Submit Second Opinion Request
+                            </button>
+                            <p class="form-note">
+                                <i class="fas fa-shield-alt"></i>
+                                Your information is secure and will be handled with strict confidentiality
+                            </p>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Success Message (Hidden by default) -->
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <div class="success-content">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2>Thank You!</h2>
+                        <p>Your second opinion request has been successfully submitted.</p>
+                        <p><strong>Dr Prathyusha will review your medical reports and provide her expert opinion.</strong></p>
+                        <p>You will receive her response directly via WhatsApp within 24-48 hours.</p>
+                        <div class="success-actions">
+                            <a href="index.html" class="btn btn-secondary">Return to Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Dr Prathyusha Eaga</h3>
+                    <p>Consultant Medical Oncologist</p>
+                    <p>MBBS, MD, DM (Medical Oncology)</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#expertise">Expertise</a></li>
+                        <li><a href="index.html#treatments">Treatments</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-hospital"></i> Sparsh Hospitals, Bengaluru</p>
+                    <p><i class="fas fa-clock"></i> Mon-Sat: 10AM-2PM, 3PM-4PM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Dr Prathyusha Eaga. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="second-opinion.js"></script>
+</body>
+</html> 
