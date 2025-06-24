@@ -964,14 +964,11 @@ body {
 }
 
 @media (max-width: 768px) {
-    nav.navbar .nav-menu {
-        background: #fff !important;
-    }
-    nav.navbar .nav-menu .nav-link {
+    body .navbar .nav-menu .nav-link {
         color: #1d1d1f !important;
     }
-    nav.navbar .nav-menu .nav-link:hover,
-    nav.navbar .nav-menu .nav-link.active {
+    body .navbar .nav-menu .nav-link:hover,
+    body .navbar .nav-menu .nav-link.active {
         color: #007AFF !important;
     }
     nav.navbar .hamburger span {
