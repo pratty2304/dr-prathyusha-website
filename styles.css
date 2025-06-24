@@ -68,7 +68,7 @@ body {
     display: flex;
     list-style: none;
     gap: 1.5rem;
-    background-color: #fff;
+    background: transparent !important;
 }
 
 .nav-link {
