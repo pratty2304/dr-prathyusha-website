@@ -18,7 +18,9 @@
 </head>
 <body>
     <script>
-      if (window.location.pathname.endsWith('second-opinion.html')) {
+      // Only redirect if loaded directly (no referrer or external referrer)
+      const isDirect = document.referrer === '' || !document.referrer.includes(window.location.hostname);
+      if (isDirect) {
         window.location.replace('index.html');
       }
     </script>
