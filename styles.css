@@ -964,11 +964,14 @@ body {
 }
 
 @media (max-width: 768px) {
-    body .navbar .nav-menu .nav-link {
+    body.home-page .navbar .nav-menu .nav-link,
+    body:not(.home-page) .navbar .nav-menu .nav-link {
         color: #1d1d1f !important;
     }
-    body .navbar .nav-menu .nav-link:hover,
-    body .navbar .nav-menu .nav-link.active {
+    body.home-page .navbar .nav-menu .nav-link:hover,
+    body.home-page .navbar .nav-menu .nav-link.active,
+    body:not(.home-page) .navbar .nav-menu .nav-link:hover,
+    body:not(.home-page) .navbar .nav-menu .nav-link.active {
         color: #007AFF !important;
     }
     nav.navbar .hamburger span {
@@ -2035,4 +2038,17 @@ body:not(.home-page) .navbar .hamburger span {
     font-weight: bold;
     font-size: 1.1rem;
     line-height: 1;
+}
+
+@media (max-width: 768px) {
+    body.home-page .navbar .nav-menu .nav-link,
+    body:not(.home-page) .navbar .nav-menu .nav-link {
+        color: #1d1d1f !important;
+    }
+    body.home-page .navbar .nav-menu .nav-link:hover,
+    body.home-page .navbar .nav-menu .nav-link.active,
+    body:not(.home-page) .navbar .nav-menu .nav-link:hover,
+    body:not(.home-page) .navbar .nav-menu .nav-link.active {
+        color: #007AFF !important;
+    }
 } 
