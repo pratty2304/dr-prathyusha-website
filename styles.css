@@ -25,15 +25,14 @@ body {
 }
 
 /* Navigation */
-.navbar {
+.navbar, .navbar.scrolled {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    background: #1d1d1f !important;
+    border-bottom: 1px solid #333 !important;
+    box-shadow: none !important;
     z-index: 1000;
     transition: all 0.3s ease;
 }
