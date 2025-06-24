@@ -1186,6 +1186,10 @@ body {
     .footer-section {
         padding: 0 1rem;
     }
+
+    .hero {
+        padding-top: 90px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1340,6 +1344,10 @@ body {
     
     .contact-icon i {
         font-size: 1.5rem;
+    }
+
+    .hero {
+        padding-top: 90px;
     }
 }
 
