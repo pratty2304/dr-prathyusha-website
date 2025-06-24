@@ -69,6 +69,7 @@ body {
     display: flex;
     list-style: none;
     gap: 1.5rem;
+    background-color: #fff;
 }
 
 .nav-link {
@@ -1570,6 +1571,9 @@ body {
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+    }
+    .nav-menu {
+        background-color: #18181a;
     }
 }
 
