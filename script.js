@@ -568,7 +568,7 @@ if (window.location.pathname.endsWith('index.html') || window.location.pathname 
                 calendlyContainer.innerHTML = '';
                 if (value && calendlyWidgets[value]) {
                     calendlyContainer.style.display = 'block';
-                    calendlyContainer.innerHTML = '<div class="calendly-inline-widget" data-url="' + calendlyWidgets[value] + '" style="min-width:320px;height:700px;"></div>';
+                    calendlyContainer.innerHTML = '<div class="calendly-inline-widget" data-url="' + calendlyWidgets[value] + '" style="min-width:320px;height:550px;"></div>';
                     var s = document.createElement('script');
                     s.id = calendlyScriptId;
                     s.type = 'text/javascript';
