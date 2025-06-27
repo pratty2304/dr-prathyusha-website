@@ -548,4 +548,38 @@ if (!document.querySelector('meta[name="viewport"]')) {
     viewport.name = 'viewport';
     viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
     document.head.appendChild(viewport);
+}
+
+// Calendly dynamic embed for appointment form
+if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
+    document.addEventListener('DOMContentLoaded', function() {
+        var hospitalSelect = document.getElementById('hospital');
+        var calendlyContainer = document.getElementById('calendly-embed-container');
+        var calendlyScriptId = 'calendly-widget-script';
+        var calendlyWidgets = {
+            'rr-nagar': 'https://calendly.com/prathyusha23/rr-nagar-appointment?hide_event_type_details=1&hide_gdpr_banner=1',
+            'infantry-road': 'https://calendly.com/prathyusha23/infantry-road-appointment?hide_event_type_details=1&hide_gdpr_banner=1'
+        };
+        if (hospitalSelect && calendlyContainer) {
+            hospitalSelect.addEventListener('change', function() {
+                var value = hospitalSelect.value;
+                calendlyContainer.innerHTML = '';
+                if (value && calendlyWidgets[value]) {
+                    calendlyContainer.style.display = 'block';
+                    calendlyContainer.innerHTML = '<div class="calendly-inline-widget" data-url="' + calendlyWidgets[value] + '" style="min-width:320px;height:700px;"></div>';
+                    // Add Calendly script if not already present
+                    if (!document.getElementById(calendlyScriptId)) {
+                        var s = document.createElement('script');
+                        s.id = calendlyScriptId;
+                        s.type = 'text/javascript';
+                        s.src = 'https://assets.calendly.com/assets/external/widget.js';
+                        s.async = true;
+                        document.body.appendChild(s);
+                    }
+                } else {
+                    calendlyContainer.style.display = 'none';
+                }
+            });
+        }
+    });
 } 

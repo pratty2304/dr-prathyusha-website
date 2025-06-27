@@ -283,26 +283,8 @@
                                 <option value="infantry-road">Sparsh Hospital, Infantry Road</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <select id="appointmentTime" name="appointmentTime" required>
-                                <option value="">Select Preferred Time</option>
-                                <option value="10:00 AM" data-hospital="rr-nagar">10:00 AM (RR Nagar only)</option>
-                                <option value="10:30 AM" data-hospital="rr-nagar">10:30 AM (RR Nagar only)</option>
-                                <option value="11:00 AM" data-hospital="rr-nagar">11:00 AM (RR Nagar only)</option>
-                                <option value="11:30 AM" data-hospital="rr-nagar">11:30 AM (RR Nagar only)</option>
-                                <option value="12:00 PM" data-hospital="rr-nagar">12:00 PM (RR Nagar only)</option>
-                                <option value="12:30 PM" data-hospital="rr-nagar">12:30 PM (RR Nagar only)</option>
-                                <option value="1:00 PM" data-hospital="rr-nagar">1:00 PM (RR Nagar only)</option>
-                                <option value="1:30 PM" data-hospital="rr-nagar">1:30 PM (RR Nagar only)</option>
-                                <option value="2:00 PM" data-hospital="rr-nagar">2:00 PM (RR Nagar only)</option>
-                                <option value="3:00 PM" data-hospital="infantry-road">3:00 PM (Infantry Road only)</option>
-                                <option value="3:30 PM" data-hospital="infantry-road">3:30 PM (Infantry Road only)</option>
-                                <option value="4:00 PM" data-hospital="infantry-road">4:00 PM (Infantry Road only)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="message" name="message" placeholder="Brief description of your condition or reason for appointment" rows="4"></textarea>
-                        </div>
+                        <!-- Calendly widget will be injected here -->
+                        <div id="calendly-embed-container" style="display:none; margin-top:2.5rem;"></div>
                         <button type="submit" class="btn btn-primary">Schedule Appointment</button>
                     </form>
                 </div>
