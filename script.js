@@ -563,19 +563,20 @@ if (window.location.pathname.endsWith('index.html') || window.location.pathname 
         if (hospitalSelect && calendlyContainer) {
             hospitalSelect.addEventListener('change', function() {
                 var value = hospitalSelect.value;
+                // Remove any previous Calendly widget script to force reload
+                var oldScript = document.getElementById(calendlyScriptId);
+                if (oldScript) oldScript.remove();
                 calendlyContainer.innerHTML = '';
                 if (value && calendlyWidgets[value]) {
                     calendlyContainer.style.display = 'block';
                     calendlyContainer.innerHTML = '<div class="calendly-inline-widget" data-url="' + calendlyWidgets[value] + '" style="min-width:320px;height:700px;"></div>';
-                    // Add Calendly script if not already present
-                    if (!document.getElementById(calendlyScriptId)) {
-                        var s = document.createElement('script');
-                        s.id = calendlyScriptId;
-                        s.type = 'text/javascript';
-                        s.src = 'https://assets.calendly.com/assets/external/widget.js';
-                        s.async = true;
-                        document.body.appendChild(s);
-                    }
+                    // Add Calendly script
+                    var s = document.createElement('script');
+                    s.id = calendlyScriptId;
+                    s.type = 'text/javascript';
+                    s.src = 'https://assets.calendly.com/assets/external/widget.js';
+                    s.async = true;
+                    document.body.appendChild(s);
                 } else {
                     calendlyContainer.style.display = 'none';
                 }
