@@ -2104,9 +2104,9 @@ body:not(.home-page) .navbar .hamburger span {
 
 /* Video Consultation Disclaimer Responsive Style */
 .video-disclaimer {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: initial;
 }
 @media (max-width: 768px) {
     .video-disclaimer {
