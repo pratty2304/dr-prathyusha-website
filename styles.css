@@ -2150,4 +2150,24 @@ body:not(.home-page) .navbar .hamburger span {
     .qual-title {
         margin-top: 0.1rem;
     }
+}
+
+.highlight-title {
+    font-weight: 600;
+    color: #2266bb;
+    background: rgba(34,102,187,0.07);
+    border-radius: 6px;
+    padding: 0.12em 0.7em;
+    box-shadow: 0 1px 6px rgba(34,102,187,0.07);
+    transition: background 0.2s, color 0.2s;
+}
+@media (max-width: 768px) {
+    .highlight-title {
+        font-size: 1.08rem;
+        background: rgba(34,102,187,0.11);
+        color: #2266bb;
+        box-shadow: none;
+        padding: 0.18em 0.7em;
+        margin-top: 0.1rem;
+    }
 } 
