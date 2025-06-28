@@ -69,10 +69,24 @@
         <div class="container">
             <div class="form-header" style="text-align:center; margin: 0 auto 2.5rem auto; max-width: 600px;">
                 <h2 style="margin-bottom: 0.7rem;">Book Your Video Consultation</h2>
+                <p style="margin-bottom: 0; font-size: 1.08rem; color: #424245;">Step 1: Select your preferred date and time below.<br>Step 2: Enter your details and any additional information on the next screen to confirm your booking.</p>
             </div>
             <!-- Calendly Inline Embed -->
             <div class="calendly-inline-widget" data-url="https://calendly.com/prathyusha23/video-consultations?hide_event_type_details=1&hide_gdpr_banner=1" style="min-width:320px;height:550px;margin-top:2.5rem;"></div>
             <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+            <div style="max-width: 600px; margin: 2rem auto 0 auto; text-align: center;">
+                <form id="video-disclaimer-form" style="display: flex; flex-direction: column; align-items: center;">
+                    <p style="font-size: 1rem; color: #b00020; margin-bottom: 1rem;">
+                        <strong>Disclaimer:</strong> This video consultation service is for <strong>non-emergency medical concerns only</strong>.<br>
+                        If you are experiencing a medical emergency, please visit your nearest hospital or call emergency services immediately.<br>
+                        By booking a video consultation, you acknowledge and agree that Dr. Prathyusha Eaga is not liable for any emergency situations arising from the use of this service.
+                    </p>
+                    <label style="font-size: 0.98rem; color: #333; display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" id="disclaimer-agree" required style="width: 18px; height: 18px; margin-right: 0.5rem;">
+                        I have read and agree to the above disclaimer.
+                    </label>
+                </form>
+            </div>
         </div>
     </section>
 
