@@ -2100,4 +2100,17 @@ body:not(.home-page) .navbar .hamburger span {
         font-size: 1rem;
         padding: 12px 0;
     }
+}
+
+/* Video Consultation Disclaimer Responsive Style */
+.video-disclaimer {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 768px) {
+    .video-disclaimer {
+        white-space: normal;
+        text-overflow: initial;
+    }
 } 
