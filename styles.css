@@ -2170,4 +2170,13 @@ body:not(.home-page) .navbar .hamburger span {
         padding: 0.18em 0.7em;
         margin-top: 0.1rem;
     }
+}
+
+.footer-section h4,
+.footer-section .emergency-contact {
+    color: #fff !important;
+}
+.footer-section .emergency-contact {
+    font-weight: 600;
+    color: #fff !important;
 } 
