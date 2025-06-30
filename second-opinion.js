@@ -14,6 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileList = document.getElementById('fileList');
     const successMessage = document.getElementById('successMessage');
 
+    // Razorpay payment integration
+    const payBtn = document.getElementById('payBtn');
+    const submitBtn = form.querySelector('.submit-btn');
+    let paymentSuccess = false;
+
     // File upload event listeners
     fileInput.addEventListener('change', handleFileSelect);
     uploadBtn.addEventListener('click', (event) => {
@@ -163,7 +168,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Show loading state
-        const submitBtn = form.querySelector('.submit-btn');
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
         submitBtn.disabled = true;
@@ -318,4 +322,81 @@ document.addEventListener('DOMContentLoaded', function() {
     function generateSubmissionId() {
         return 'SO-' + Date.now().toString(36).toUpperCase();
     }
+
+    // Razorpay payment integration
+    payBtn.addEventListener('click', async function() {
+        // Validate required fields before payment
+        const formData = new FormData(form);
+        const patientData = {
+            name: formData.get('fullName'),
+            age: formData.get('age'),
+            sex: formData.get('sex'),
+            phone: formData.get('phone'),
+            email: formData.get('email'),
+            concern: formData.get('concernDescription')
+        };
+        if (!patientData.name || !patientData.phone || !patientData.concern) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        payBtn.disabled = true;
+        try {
+            // Create Razorpay order
+            const res = await fetch('/api/create-razorpay-order', { method: 'POST' });
+            const data = await res.json();
+            if (!data.orderId) throw new Error('Order creation failed');
+            // Load Razorpay script if not loaded
+            if (!window.Razorpay) {
+                await loadRazorpayScript();
+            }
+            const options = {
+                key: data.keyId,
+                amount: data.amount,
+                currency: 'INR',
+                name: 'Dr Prathyusha Eaga',
+                description: 'Second Opinion Consultation',
+                order_id: data.orderId,
+                handler: function (response) {
+                    paymentSuccess = true;
+                    payBtn.style.display = 'none';
+                    submitBtn.style.display = 'inline-block';
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Second Opinion Request';
+                    submitBtn.disabled = false;
+                    alert('Payment successful! Please click Submit to complete your request.');
+                },
+                prefill: {
+                    name: patientData.name,
+                    email: patientData.email,
+                    contact: patientData.phone
+                },
+                theme: { color: '#007AFF' }
+            };
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        } catch (err) {
+            alert('Payment failed to start. Please try again.');
+            payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Proceed to Payment';
+            payBtn.disabled = false;
+        }
+    });
+
+    async function loadRazorpayScript() {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+    }
+
+    // Block form submission until payment is successful
+    form.addEventListener('submit', function(event) {
+        if (!paymentSuccess) {
+            event.preventDefault();
+            alert('Please complete payment before submitting the form.');
+            return false;
+        }
+    }, true);
 }); 

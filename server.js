@@ -3,6 +3,7 @@ const multer = require('multer');
 const { Resend } = require('resend');
 const path = require('path');
 const fs = require('fs');
+const Razorpay = require('razorpay');
 
 const app = express();
 const PORT = 8082;
@@ -10,6 +11,11 @@ const PORT = 8082;
 // --- IMPORTANT ---
 // Replace 'YOUR_API_KEY' with the actual API key you get from resend.com
 const resend = new Resend('re_BVrwasYQ_6d6wck57CcdiwemT9qpZ4xaq');
+
+const razorpay = new Razorpay({
+    key_id: 'rzp_test_GlxyaIMe4VR2Bd',
+    key_secret: 'ET4OemkN614vDqj1gsGpm1nE'
+});
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -400,6 +406,22 @@ app.post('/api/reviews', express.json(), (req, res) => {
             res.json(newReview);
         });
     });
+});
+
+app.post('/api/create-razorpay-order', async (req, res) => {
+    try {
+        const options = {
+            amount: 2000 * 100, // Rs 2000 in paise
+            currency: 'INR',
+            receipt: 'second-opinion-' + Date.now(),
+            payment_capture: 1
+        };
+        const order = await razorpay.orders.create(options);
+        res.json({ orderId: order.id, keyId: razorpay.key_id, amount: options.amount });
+    } catch (err) {
+        console.error('Razorpay order error:', err);
+        res.status(500).json({ error: 'Unable to create Razorpay order' });
+    }
 });
 
 // Start server
