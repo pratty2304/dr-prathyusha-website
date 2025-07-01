@@ -411,7 +411,7 @@ app.post('/api/reviews', express.json(), (req, res) => {
 app.post('/api/create-razorpay-order', async (req, res) => {
     try {
         const options = {
-            amount: 2000 * 100, // Rs 2000 in paise
+            amount: 1999 * 100, // Rs 1999 in paise
             currency: 'INR',
             receipt: 'second-opinion-' + Date.now(),
             payment_capture: 1

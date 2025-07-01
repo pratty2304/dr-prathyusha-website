@@ -335,6 +335,11 @@ document.addEventListener('DOMContentLoaded', function() {
             email: formData.get('email'),
             concern: formData.get('concernDescription')
         };
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        if (!termsCheckbox.checked) {
+            alert('You must agree to the terms and conditions before proceeding to payment.');
+            return;
+        }
         if (!patientData.name || !patientData.phone || !patientData.concern) {
             alert('Please fill in all required fields.');
             return;
