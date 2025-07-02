@@ -22,10 +22,30 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show success message
             showNotification('Payment successful! Submitting your request...', 'success');
             
-            // Automatically submit the form after a short delay
-            setTimeout(() => {
-                form.dispatchEvent(new Event('submit'));
-            }, 1000);
+            // Retrieve stored form data and submit
+            const storedData = sessionStorage.getItem('secondOpinionFormData');
+            if (storedData) {
+                try {
+                    const formData = JSON.parse(storedData);
+                    console.log('Retrieved stored form data:', formData);
+                    
+                    // Submit the stored data directly
+                    setTimeout(() => {
+                        submitStoredFormData(formData);
+                    }, 1000);
+                } catch (error) {
+                    console.error('Error parsing stored form data:', error);
+                    // Fallback to regular form submission
+                    setTimeout(() => {
+                        form.dispatchEvent(new Event('submit'));
+                    }, 1000);
+                }
+            } else {
+                // Fallback to regular form submission
+                setTimeout(() => {
+                    form.dispatchEvent(new Event('submit'));
+                }, 1000);
+            }
         }
     }
 
@@ -167,6 +187,79 @@ document.addEventListener('DOMContentLoaded', function() {
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Submit stored form data after payment
+    async function submitStoredFormData(storedFormData) {
+        try {
+            console.log('Submitting stored form data:', storedFormData);
+            
+            // Create a FormData object with the stored patient data
+            const formData = new FormData();
+            formData.append('fullName', storedFormData.patientData.name);
+            formData.append('age', storedFormData.patientData.age);
+            formData.append('sex', storedFormData.patientData.sex);
+            formData.append('phone', storedFormData.patientData.phone);
+            formData.append('email', storedFormData.patientData.email);
+            formData.append('concernDescription', storedFormData.patientData.concern);
+            
+            // Add files from uploadedFiles array (they should still be available)
+            uploadedFiles.forEach((fileData, index) => {
+                formData.append('medicalReports', fileData.file);
+            });
+            
+            // Send the form data to the server
+            const response = await fetch('/api/second-opinion', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log('Form submitted successfully:', result);
+            
+            // Show success message
+            form.style.display = 'none';
+            successMessage.innerHTML = `
+                <div class="success-content">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Thank You!</h2>
+                    <p>Your second opinion request has been successfully submitted.</p>
+                    <p><strong>Dr Prathyusha will review your medical reports and provide her expert opinion.</strong></p>
+                    <p>You will receive her response directly via WhatsApp within 24-48 hours.</p>
+                    <div class="submission-details">
+                        <p><strong>Submission ID:</strong> ${generateSubmissionId()}</p>
+                        <p><strong>Files uploaded:</strong> ${uploadedFiles.length}</p>
+                        <p><strong>Contact method:</strong> Email to ${storedFormData.patientData.email}</p>
+                    </div>
+                    <div class="success-actions">
+                        <a href="index.html" class="btn btn-secondary">Return to Home</a>
+                    </div>
+                </div>
+            `;
+            successMessage.style.display = 'block';
+            
+            // Clear stored data
+            sessionStorage.removeItem('secondOpinionFormData');
+            uploadedFiles = [];
+            displayFiles();
+            
+        } catch (error) {
+            console.error('Error submitting stored form data:', error);
+            alert('There was an error submitting your request. Please contact support.');
+            
+            // Reset button state
+            const submitBtn = document.querySelector('.submit-btn');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Second Opinion Request';
+                submitBtn.disabled = false;
+            }
+        }
     }
 
     // Handle form submission
@@ -370,6 +463,19 @@ document.addEventListener('DOMContentLoaded', function() {
         payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         payBtn.disabled = true;
         try {
+            // Store form data and files temporarily
+            const formDataToStore = {
+                patientData: patientData,
+                files: uploadedFiles.map(fileData => ({
+                    name: fileData.name,
+                    size: fileData.size,
+                    type: fileData.type
+                }))
+            };
+            
+            // Store in sessionStorage for retrieval after payment
+            sessionStorage.setItem('secondOpinionFormData', JSON.stringify(formDataToStore));
+            
             // Create Instamojo payment request
             const res = await fetch('/api/create-instamojo-payment-request', {
                 method: 'POST',
