@@ -3,7 +3,7 @@ const multer = require('multer');
 const { Resend } = require('resend');
 const path = require('path');
 const fs = require('fs');
-const Razorpay = require('razorpay');
+const Instamojo = require('instamojo-payment-nodejs');
 
 const app = express();
 const PORT = 8082;
@@ -12,10 +12,9 @@ const PORT = 8082;
 // Replace 'YOUR_API_KEY' with the actual API key you get from resend.com
 const resend = new Resend('re_BVrwasYQ_6d6wck57CcdiwemT9qpZ4xaq');
 
-const razorpay = new Razorpay({
-    key_id: 'rzp_test_GlxyaIMe4VR2Bd',
-    key_secret: 'ET4OemkN614vDqj1gsGpm1nE'
-});
+// Initialize Instamojo
+Instamojo.setKeys('8847125ce516004121e301e72eeffbdf', 'c216a1c41c8afda3ebb3b97191aa8705');
+Instamojo.isSandboxMode(false); // Set to false for production
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -408,19 +407,56 @@ app.post('/api/reviews', express.json(), (req, res) => {
     });
 });
 
-app.post('/api/create-razorpay-order', async (req, res) => {
+app.post('/api/create-instamojo-payment-request', async (req, res) => {
     try {
-        const options = {
-            amount: 1999 * 100, // Rs 1999 in paise
-            currency: 'INR',
-            receipt: 'second-opinion-' + Date.now(),
-            payment_capture: 1
+        const { name, email, phone } = req.body;
+        
+        const paymentData = {
+            purpose: 'Second Opinion Consultation',
+            amount: 1999,
+            phone: phone || '',
+            buyer_name: name || '',
+            redirect_url: `${req.protocol}://${req.get('host')}/second-opinion?payment=success`,
+            webhook: `${req.protocol}://${req.get('host')}/api/instamojo-webhook`,
+            send_email: true,
+            send_sms: true,
+            email: email || '',
+            allow_repeated_payments: false
         };
-        const order = await razorpay.orders.create(options);
-        res.json({ orderId: order.id, keyId: razorpay.key_id, amount: options.amount });
+
+        const response = await Instamojo.createNewPaymentRequest(paymentData);
+        console.log('Instamojo payment request created:', response);
+        
+        res.json({ 
+            paymentUrl: response.payment_request.longurl,
+            paymentRequestId: response.payment_request.id
+        });
     } catch (err) {
-        console.error('Razorpay order error:', err);
-        res.status(500).json({ error: 'Unable to create Razorpay order' });
+        console.error('Instamojo payment request error:', err);
+        res.status(500).json({ error: 'Unable to create Instamojo payment request' });
+    }
+});
+
+// Instamojo webhook endpoint
+app.post('/api/instamojo-webhook', (req, res) => {
+    try {
+        const data = req.body;
+        console.log('Instamojo webhook received:', data);
+        
+        // Verify webhook signature (you can implement signature verification using the salt)
+        // For now, we'll just log the webhook data
+        console.log('Webhook signature header:', req.headers['x-instamojo-signature']);
+        
+        // Process the webhook data
+        if (data.status === 'Credit') {
+            console.log('Payment successful for payment request:', data.payment_request_id);
+            // You can add additional logic here like updating database, sending confirmation emails, etc.
+        }
+        
+        res.status(200).json({ status: 'success' });
+    } catch (error) {
+        console.error('Webhook error:', error);
+        res.status(500).json({ error: 'Webhook processing failed' });
     }
 });
 

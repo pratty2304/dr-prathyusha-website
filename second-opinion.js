@@ -6,6 +6,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Doctor's email for receiving second opinion requests
     const DOCTOR_EMAIL = 'prathyusha23@gmail.com';
 
+    // Check if payment was successful (redirect from Instamojo)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+        // Payment was successful, show submit button
+        const payBtn = document.getElementById('payBtn');
+        const submitBtn = document.querySelector('.submit-btn');
+        if (payBtn && submitBtn) {
+            payBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-block';
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Second Opinion Request';
+            submitBtn.disabled = false;
+            
+            // Show success message
+            showNotification('Payment successful! Please complete your submission below.', 'success');
+        }
+    }
+
     // Form elements
     const form = document.getElementById('secondOpinionForm');
     const fileInput = document.getElementById('fileInput');
@@ -14,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileList = document.getElementById('fileList');
     const successMessage = document.getElementById('successMessage');
 
-    // Razorpay payment integration
+    // Instamojo payment integration
     const payBtn = document.getElementById('payBtn');
     const submitBtn = form.querySelector('.submit-btn');
     let paymentSuccess = false;
@@ -323,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'SO-' + Date.now().toString(36).toUpperCase();
     }
 
-    // Razorpay payment integration
+    // Instamojo payment integration
     payBtn.addEventListener('click', async function() {
         // Validate required fields before payment
         const formData = new FormData(form);
@@ -347,54 +364,30 @@ document.addEventListener('DOMContentLoaded', function() {
         payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         payBtn.disabled = true;
         try {
-            // Create Razorpay order
-            const res = await fetch('/api/create-razorpay-order', { method: 'POST' });
-            const data = await res.json();
-            if (!data.orderId) throw new Error('Order creation failed');
-            // Load Razorpay script if not loaded
-            if (!window.Razorpay) {
-                await loadRazorpayScript();
-            }
-            const options = {
-                key: data.keyId,
-                amount: data.amount,
-                currency: 'INR',
-                name: 'Dr Prathyusha Eaga',
-                description: 'Second Opinion Consultation',
-                order_id: data.orderId,
-                handler: function (response) {
-                    paymentSuccess = true;
-                    payBtn.style.display = 'none';
-                    submitBtn.style.display = 'inline-block';
-                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Second Opinion Request';
-                    submitBtn.disabled = false;
-                    alert('Payment successful! Please click Submit to complete your request.');
+            // Create Instamojo payment request
+            const res = await fetch('/api/create-instamojo-payment-request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                prefill: {
+                body: JSON.stringify({
                     name: patientData.name,
                     email: patientData.email,
-                    contact: patientData.phone
-                },
-                theme: { color: '#007AFF' }
-            };
-            const rzp = new window.Razorpay(options);
-            rzp.open();
+                    phone: patientData.phone
+                })
+            });
+            const data = await res.json();
+            if (!data.paymentUrl) throw new Error('Payment request creation failed');
+            
+            // Redirect to Instamojo payment page
+            window.location.href = data.paymentUrl;
         } catch (err) {
+            console.error('Payment error:', err);
             alert('Payment failed to start. Please try again.');
             payBtn.innerHTML = '<i class="fas fa-credit-card"></i> Proceed to Payment';
             payBtn.disabled = false;
         }
     });
-
-    async function loadRazorpayScript() {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-            script.onload = resolve;
-            script.onerror = reject;
-            document.body.appendChild(script);
-        });
-    }
 
     // Block form submission until payment is successful
     form.addEventListener('submit', function(event) {
@@ -404,4 +397,73 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
     }, true);
+
+    // Notification function
+    function showNotification(message, type = 'info') {
+        // Remove existing notifications
+        const existingNotifications = document.querySelectorAll('.notification');
+        existingNotifications.forEach(notification => notification.remove());
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            </div>
+            <button class="notification-close">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        // Add styles
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: ${type === 'success' ? '#34C759' : type === 'error' ? '#FF3B30' : '#007AFF'};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 400px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            font-family: inherit;
+        `;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 5000);
+        
+        // Close button functionality
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', () => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        });
+    }
 }); 
