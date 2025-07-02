@@ -71,6 +71,53 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form submission
     form.addEventListener('submit', handleFormSubmit);
 
+    // QR Code button click handler
+    showQRBtn.addEventListener('click', function() {
+        // Validate required fields
+        const formData = new FormData(form);
+        const patientData = {
+            name: formData.get('fullName'),
+            age: formData.get('age'),
+            sex: formData.get('sex'),
+            phone: formData.get('phone'),
+            email: formData.get('email'),
+            concern: formData.get('concernDescription')
+        };
+        
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const paymentCheckbox = document.getElementById('paymentCheckbox');
+        
+        if (!termsCheckbox.checked) {
+            alert('You must agree to the terms and conditions before proceeding.');
+            return;
+        }
+        
+        if (!paymentCheckbox.checked) {
+            alert('You must agree to the payment terms before proceeding.');
+            return;
+        }
+        
+        if (!patientData.name || !patientData.phone || !patientData.concern) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        // Show QR code section
+        qrCodeSection.style.display = 'block';
+        
+        // Hide the show QR button and show submit button
+        showQRBtn.style.display = 'none';
+        submitBtn.style.display = 'inline-block';
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Second Opinion Request';
+        submitBtn.disabled = false;
+        
+        // Scroll to QR code section
+        qrCodeSection.scrollIntoView({ behavior: 'smooth' });
+        
+        // Show notification
+        showNotification('QR Code displayed. Please scan and complete payment, then click Submit.', 'info');
+    });
+
     // File selection handler
     function handleFileSelect(event) {
         const files = Array.from(event.target.files);
@@ -508,11 +555,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Block form submission until payment is successful
+    // Block form submission until QR code is shown
     form.addEventListener('submit', function(event) {
-        if (!paymentSuccess) {
+        if (!paymentConfirmed && qrCodeSection.style.display === 'none') {
             event.preventDefault();
-            alert('Please complete payment before submitting the form.');
+            alert('Please show the QR code and complete payment before submitting the form.');
             return false;
         }
     }, true);
