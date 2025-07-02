@@ -438,7 +438,7 @@ app.post('/api/create-instamojo-payment-request', async (req, res) => {
 });
 
 // Instamojo webhook endpoint
-app.post('/api/instamojo-webhook', (req, res) => {
+app.post('/api/instamojo-webhook', async (req, res) => {
     try {
         const data = req.body;
         console.log('Instamojo webhook received:', data);
@@ -450,7 +450,54 @@ app.post('/api/instamojo-webhook', (req, res) => {
         // Process the webhook data
         if (data.status === 'Credit') {
             console.log('Payment successful for payment request:', data.payment_request_id);
-            // You can add additional logic here like updating database, sending confirmation emails, etc.
+            
+            // Send payment notification email to Dr Prathyusha
+            const paymentEmailContent = `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                    <div style="background: #34C759; color: white; padding: 20px; text-align: center;">
+                        <h1>💰 Payment Received!</h1>
+                    </div>
+                    
+                    <div style="padding: 20px; background: #f9f9f9;">
+                        <h2 style="color: #34C759; border-bottom: 2px solid #34C759; padding-bottom: 10px;">Payment Details</h2>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Amount:</td><td style="padding: 10px;">₹${data.amount}</td></tr>
+                            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Payment ID:</td><td style="padding: 10px;">${data.payment_id}</td></tr>
+                            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Request ID:</td><td style="padding: 10px;">${data.payment_request_id}</td></tr>
+                            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Buyer Name:</td><td style="padding: 10px;">${data.buyer_name || 'N/A'}</td></tr>
+                            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Buyer Email:</td><td style="padding: 10px;">${data.buyer_email || 'N/A'}</td></tr>
+                            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Buyer Phone:</td><td style="padding: 10px;">${data.buyer_phone || 'N/A'}</td></tr>
+                            <tr><td style="padding: 10px; font-weight: bold;">Status:</td><td style="padding: 10px;">${data.status}</td></tr>
+                        </table>
+                    </div>
+                    
+                    <div style="padding: 20px; text-align: center; background: #f0f0f0; color: #555;">
+                        <p><strong>Received:</strong> ${new Date().toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' })}</p>
+                        <p><strong>Service:</strong> Second Opinion Consultation</p>
+                    </div>
+                    
+                    <div style="padding: 15px; text-align: center; color: #888; font-size: 12px; background: #f9f9f9;">
+                        <p>This payment notification was sent from your Instamojo webhook.</p>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const { data: emailData, error } = await resend.emails.send({
+                    from: 'onboarding@resend.dev',
+                    to: ['prathyusha23@gmail.com'],
+                    subject: `💰 Payment Received - ₹${data.amount} from ${data.buyer_name || 'Patient'}`,
+                    html: paymentEmailContent
+                });
+
+                if (error) {
+                    console.error('Error sending payment notification email:', error);
+                } else {
+                    console.log('Payment notification email sent successfully:', emailData);
+                }
+            } catch (emailError) {
+                console.error('Error sending payment notification email:', emailError);
+            }
         }
         
         res.status(200).json({ status: 'success' });
