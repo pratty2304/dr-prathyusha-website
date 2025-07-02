@@ -48,10 +48,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileList = document.getElementById('fileList');
     const successMessage = document.getElementById('successMessage');
 
-    // Instamojo payment integration
-    const payBtn = document.getElementById('payBtn');
+    // QR Code payment integration
+    const showQRBtn = document.getElementById('showQRBtn');
     const submitBtn = form.querySelector('.submit-btn');
-    let paymentSuccess = false;
+    const qrCodeSection = document.getElementById('qrCodeSection');
+    const paymentCheckbox = document.getElementById('paymentCheckbox');
+    let paymentConfirmed = false;
 
     // File upload event listeners
     fileInput.addEventListener('change', handleFileSelect);

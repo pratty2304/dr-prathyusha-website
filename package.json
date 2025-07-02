@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "instamojo-payment-nodejs": "^3.0.0",
     "multer": "^1.4.5-lts.1",
     "resend": "^3.2.0"
   },
