@@ -9,17 +9,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if payment was successful (redirect from Instamojo)
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('payment') === 'success') {
-        // Payment was successful, show submit button
+        // Payment was successful, automatically submit the form
+        paymentSuccess = true;
         const payBtn = document.getElementById('payBtn');
         const submitBtn = document.querySelector('.submit-btn');
         if (payBtn && submitBtn) {
             payBtn.style.display = 'none';
             submitBtn.style.display = 'inline-block';
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Second Opinion Request';
-            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitBtn.disabled = true;
             
             // Show success message
-            showNotification('Payment successful! Please complete your submission below.', 'success');
+            showNotification('Payment successful! Submitting your request...', 'success');
+            
+            // Automatically submit the form after a short delay
+            setTimeout(() => {
+                form.dispatchEvent(new Event('submit'));
+            }, 1000);
         }
     }
 
