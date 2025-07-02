@@ -15,6 +15,25 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 0;
+            vertical-align: middle;
+        }
+        .checkbox-group label {
+            font-size: 1rem;
+            color: #222;
+            cursor: pointer;
+            vertical-align: middle;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 <body>
     <script>
@@ -152,18 +171,18 @@
 
                     <!-- Payment Terms -->
                     <div class="form-section" style="margin-bottom: 0.5rem;">
-                        <div class="checkbox-group" style="display: flex; align-items: flex-start; gap: 0.7rem; margin-bottom: 0.7rem;">
-                            <input type="checkbox" id="paymentCheckbox" required style="margin-top: 2px;">
-                            <label for="paymentCheckbox" style="font-size: 1rem; color: #222; cursor: pointer;">
-                                I understand that the service costs <strong>₹1,999</strong> and is <strong>non-refundable</strong>. I agree to pay this amount for the second opinion consultation.
+                        <div class="checkbox-group" style="margin-bottom: 0.7rem;">
+                            <input type="checkbox" id="paymentCheckbox" required>
+                            <label for="paymentCheckbox">
+                                I acknowledge and accept that the second opinion service fee is <strong>₹1,999</strong> (non-refundable), and I agree to make this payment for my consultation request.
                             </label>
                         </div>
                     </div>
                     <!-- Terms and Conditions -->
                     <div class="form-section" style="margin-bottom: 1.2rem;">
-                        <div class="checkbox-group" style="display: flex; align-items: flex-start; gap: 0.7rem;">
-                            <input type="checkbox" id="termsCheckbox" required style="margin-top: 2px;">
-                            <label for="termsCheckbox" style="font-size: 1rem; color: #222; cursor: pointer;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="termsCheckbox" required>
+                            <label for="termsCheckbox">
                                 I understand and agree to the terms and conditions. I acknowledge that this service is for informational purposes only and does not constitute a doctor-patient relationship until reviewed and accepted.
                             </label>
                         </div>
