@@ -228,14 +228,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="success-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <h2>Thank You!</h2>
-                    <p>Your second opinion request has been successfully submitted.</p>
-                    <p><strong>Dr Prathyusha will review your medical reports and provide her expert opinion.</strong></p>
-                    <p>You will receive her response directly via WhatsApp within 24-48 hours.</p>
-                    <div class="submission-details">
-                        <p><strong>Submission ID:</strong> ${generateSubmissionId()}</p>
-                        <p><strong>Files uploaded:</strong> ${uploadedFiles.length}</p>
-                        <p><strong>Contact method:</strong> Email to ${storedFormData.patientData.email}</p>
+                    <h2>Payment Successful & Request Submitted!</h2>
+                    <div class="success-message-content">
+                        <p><strong>✅ Payment Confirmed:</strong> Your payment of ₹1,999 has been successfully processed.</p>
+                        <p><strong>📋 Request Received:</strong> Your second opinion request with ${uploadedFiles.length} medical report(s) has been submitted to Dr Prathyusha.</p>
+                        <p><strong>📧 Response Details:</strong> Dr Prathyusha will review your medical reports and provide her expert opinion within 24-48 hours.</p>
+                        <p><strong>📱 Contact Methods:</strong> You will receive her detailed response via:</p>
+                        <ul style="text-align: left; margin: 20px 0; padding-left: 20px;">
+                            <li><strong>Email:</strong> ${storedFormData.patientData.email}</li>
+                            <li><strong>WhatsApp:</strong> ${storedFormData.patientData.phone}</li>
+                        </ul>
+                        <p><strong>🆔 Reference ID:</strong> ${generateSubmissionId()}</p>
+                        <p style="font-style: italic; color: #666; margin-top: 20px;">Please keep this reference ID for any future correspondence regarding your consultation.</p>
                     </div>
                     <div class="success-actions">
                         <a href="index.html" class="btn btn-secondary">Return to Home</a>
@@ -302,14 +306,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="success-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <h2>Thank You!</h2>
-                    <p>Your second opinion request has been successfully submitted.</p>
-                    <p><strong>Dr Prathyusha will review your medical reports and provide her expert opinion.</strong></p>
-                    <p>You will receive her response directly via WhatsApp within 24-48 hours.</p>
-                    <div class="submission-details">
-                        <p><strong>Submission ID:</strong> ${generateSubmissionId()}</p>
-                        <p><strong>Files uploaded:</strong> ${uploadedFiles.length}</p>
-                        <p><strong>Contact method:</strong> Email to ${patientData.email}</p>
+                    <h2>Request Submitted Successfully!</h2>
+                    <div class="success-message-content">
+                        <p><strong>📋 Request Received:</strong> Your second opinion request with ${uploadedFiles.length} medical report(s) has been submitted to Dr Prathyusha.</p>
+                        <p><strong>📧 Response Details:</strong> Dr Prathyusha will review your medical reports and provide her expert opinion within 24-48 hours.</p>
+                        <p><strong>📱 Contact Methods:</strong> You will receive her detailed response via:</p>
+                        <ul style="text-align: left; margin: 20px 0; padding-left: 20px;">
+                            <li><strong>Email:</strong> ${patientData.email}</li>
+                            <li><strong>WhatsApp:</strong> ${patientData.phone}</li>
+                        </ul>
+                        <p><strong>🆔 Reference ID:</strong> ${generateSubmissionId()}</p>
+                        <p style="font-style: italic; color: #666; margin-top: 20px;">Please keep this reference ID for any future correspondence regarding your consultation.</p>
                     </div>
                     <div class="success-actions">
                         <a href="index.html" class="btn btn-secondary">Return to Home</a>
