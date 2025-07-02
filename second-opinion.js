@@ -23,23 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification('Payment successful! Submitting your request...', 'success');
             
             // Retrieve stored form data and submit
-            const storedData = sessionStorage.getItem('secondOpinionFormData');
-            if (storedData) {
-                try {
-                    const formData = JSON.parse(storedData);
-                    console.log('Retrieved stored form data:', formData);
-                    
-                    // Submit the stored data directly
-                    setTimeout(() => {
-                        submitStoredFormData(formData);
-                    }, 1000);
-                } catch (error) {
-                    console.error('Error parsing stored form data:', error);
-                    // Fallback to regular form submission
-                    setTimeout(() => {
-                        form.dispatchEvent(new Event('submit'));
-                    }, 1000);
-                }
+            const tempSubmissionId = sessionStorage.getItem('tempSubmissionId');
+            if (tempSubmissionId) {
+                console.log('Retrieved temp submission ID:', tempSubmissionId);
+                
+                // Submit the stored data from server
+                setTimeout(() => {
+                    submitStoredFormDataFromServer(tempSubmissionId);
+                }, 1000);
             } else {
                 // Fallback to regular form submission
                 setTimeout(() => {
@@ -189,29 +180,20 @@ document.addEventListener('DOMContentLoaded', function() {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
-    // Submit stored form data after payment
-    async function submitStoredFormData(storedFormData) {
+    // Submit stored form data from server after payment
+    async function submitStoredFormDataFromServer(tempSubmissionId) {
         try {
-            console.log('Submitting stored form data:', storedFormData);
+            console.log('Submitting stored form data from server:', tempSubmissionId);
             
-            // Create a FormData object with the stored patient data
-            const formData = new FormData();
-            formData.append('fullName', storedFormData.patientData.name);
-            formData.append('age', storedFormData.patientData.age);
-            formData.append('sex', storedFormData.patientData.sex);
-            formData.append('phone', storedFormData.patientData.phone);
-            formData.append('email', storedFormData.patientData.email);
-            formData.append('concernDescription', storedFormData.patientData.concern);
-            
-            // Add files from uploadedFiles array (they should still be available)
-            uploadedFiles.forEach((fileData, index) => {
-                formData.append('medicalReports', fileData.file);
-            });
-            
-            // Send the form data to the server
-            const response = await fetch('/api/second-opinion', {
+            // Send request to process stored form data
+            const response = await fetch('/api/process-stored-form', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tempSubmissionId: tempSubmissionId
+                })
             });
             
             if (!response.ok) {
@@ -231,14 +213,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2>Payment Successful & Request Submitted!</h2>
                     <div class="success-message-content">
                         <p><strong>✅ Payment Confirmed:</strong> Your payment of ₹1,999 has been successfully processed.</p>
-                        <p><strong>📋 Request Received:</strong> Your second opinion request with ${uploadedFiles.length} medical report(s) has been submitted to Dr Prathyusha.</p>
+                        <p><strong>📋 Request Received:</strong> Your second opinion request has been submitted to Dr Prathyusha.</p>
                         <p><strong>📧 Response Details:</strong> Dr Prathyusha will review your medical reports and provide her expert opinion within 24-48 hours.</p>
                         <p><strong>📱 Contact Methods:</strong> You will receive her detailed response via:</p>
                         <ul style="text-align: left; margin: 20px 0; padding-left: 20px;">
-                            <li><strong>Email:</strong> ${storedFormData.patientData.email}</li>
-                            <li><strong>WhatsApp:</strong> ${storedFormData.patientData.phone}</li>
+                            <li><strong>Email:</strong> ${result.patientEmail}</li>
+                            <li><strong>WhatsApp:</strong> ${result.patientPhone}</li>
                         </ul>
-                        <p><strong>🆔 Reference ID:</strong> ${generateSubmissionId()}</p>
+                        <p><strong>🆔 Reference ID:</strong> ${result.submissionId}</p>
                         <p style="font-style: italic; color: #666; margin-top: 20px;">Please keep this reference ID for any future correspondence regarding your consultation.</p>
                     </div>
                     <div class="success-actions">
@@ -249,9 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
             successMessage.style.display = 'block';
             
             // Clear stored data
-            sessionStorage.removeItem('secondOpinionFormData');
-            uploadedFiles = [];
-            displayFiles();
+            sessionStorage.removeItem('tempSubmissionId');
             
         } catch (error) {
             console.error('Error submitting stored form data:', error);
@@ -470,18 +450,36 @@ document.addEventListener('DOMContentLoaded', function() {
         payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         payBtn.disabled = true;
         try {
-            // Store form data and files temporarily
-            const formDataToStore = {
-                patientData: patientData,
-                files: uploadedFiles.map(fileData => ({
-                    name: fileData.name,
-                    size: fileData.size,
-                    type: fileData.type
-                }))
-            };
+            // Create a temporary submission ID
+            const tempSubmissionId = generateSubmissionId();
             
-            // Store in sessionStorage for retrieval after payment
-            sessionStorage.setItem('secondOpinionFormData', JSON.stringify(formDataToStore));
+            // Store form data temporarily on server before payment
+            const tempFormData = new FormData();
+            tempFormData.append('fullName', patientData.name);
+            tempFormData.append('age', patientData.age);
+            tempFormData.append('sex', patientData.sex);
+            tempFormData.append('phone', patientData.phone);
+            tempFormData.append('email', patientData.email);
+            tempFormData.append('concernDescription', patientData.concern);
+            tempFormData.append('tempSubmissionId', tempSubmissionId);
+            
+            // Add files
+            uploadedFiles.forEach((fileData, index) => {
+                tempFormData.append('medicalReports', fileData.file);
+            });
+            
+            // Store temporarily on server
+            const tempRes = await fetch('/api/temp-store-form', {
+                method: 'POST',
+                body: tempFormData
+            });
+            
+            if (!tempRes.ok) {
+                throw new Error('Failed to store form data temporarily');
+            }
+            
+            // Store submission ID for retrieval after payment
+            sessionStorage.setItem('tempSubmissionId', tempSubmissionId);
             
             // Create Instamojo payment request
             const res = await fetch('/api/create-instamojo-payment-request', {

@@ -507,6 +507,160 @@ app.post('/api/instamojo-webhook', async (req, res) => {
     }
 });
 
+// Temporary storage for form data (in production, use a database)
+const tempFormStorage = new Map();
+
+// API endpoint for temporary form storage before payment
+app.post('/api/temp-store-form', upload.array('medicalReports'), async (req, res) => {
+    try {
+        const formData = req.body;
+        const files = req.files || [];
+        const tempSubmissionId = formData.tempSubmissionId;
+
+        // Store form data and files temporarily
+        tempFormStorage.set(tempSubmissionId, {
+            formData: formData,
+            files: files,
+            timestamp: Date.now()
+        });
+
+        console.log('Temporarily stored form data for ID:', tempSubmissionId);
+        res.json({ success: true, tempSubmissionId: tempSubmissionId });
+
+    } catch (error) {
+        console.error('Error storing form data temporarily:', error);
+        res.status(500).json({ error: 'Failed to store form data temporarily' });
+    }
+});
+
+// API endpoint for processing stored form data after payment
+app.post('/api/process-stored-form', async (req, res) => {
+    try {
+        const { tempSubmissionId } = req.body;
+        
+        // Retrieve stored form data
+        const storedData = tempFormStorage.get(tempSubmissionId);
+        if (!storedData) {
+            return res.status(404).json({ error: 'Stored form data not found' });
+        }
+
+        const { formData, files } = storedData;
+        const submissionId = `SO-${Date.now().toString(36).toUpperCase()}`;
+        const submissionDate = new Date().toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' });
+
+        // Format patient data for email
+        let emailContent = `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+    <div style="background: #4A90E2; color: white; padding: 20px; text-align: center;">
+        <h1>🏥 New Second Opinion Request</h1>
+    </div>
+    
+    <div style="padding: 20px; background: #f9f9f9;">
+        <h2 style="color: #4A90E2; border-bottom: 2px solid #4A90E2; padding-bottom: 10px;">👤 Patient Details</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Name:</td><td style="padding: 10px;">${formData.fullName}</td></tr>
+            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Age:</td><td style="padding: 10px;">${formData.age}</td></tr>
+            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Sex:</td><td style="padding: 10px;">${formData.sex}</td></tr>
+            <tr style="border-bottom: 1px solid #e0e0e0;"><td style="padding: 10px; font-weight: bold;">Phone:</td><td style="padding: 10px;">${formData.phone}</td></tr>
+            <tr><td style="padding: 10px; font-weight: bold;">Email:</td><td style="padding: 10px;">${formData.email}</td></tr>
+        </table>
+    </div>
+    
+    <div style="padding: 20px;">
+        <h2 style="color: #4A90E2; border-bottom: 2px solid #4A90E2; padding-bottom: 10px;">🩺 Medical Concern</h2>
+        <div style="padding: 15px; background: #fdfdff; border-left: 4px solid #4A90E2; margin-top: 10px;">
+            <p style="white-space: pre-wrap; line-height: 1.6;">${formData.concernDescription}</p>
+        </div>
+    </div>
+`;
+
+        // Add attachments section if files exist
+        if (files.length > 0) {
+            emailContent += `
+    <div style="padding: 20px; background: #f9f9f9;">
+        <h2 style="color: #4A90E2; border-bottom: 2px solid #4A90E2; padding-bottom: 10px;">📎 Attached Files</h2>
+        <ul style="list-style-type: none; padding: 0;">`;
+    
+            files.forEach(file => {
+                emailContent += `<li style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;">${file.originalname} (${formatFileSize(file.size)})</li>`;
+            });
+
+            emailContent += `
+        </ul>
+    </div>`;
+        }
+
+        // Add footer
+        emailContent += `
+    <div style="padding: 20px; text-align: center; background: #f0f0f0; color: #555;">
+        <p><strong>Submission ID:</strong> ${submissionId}</p>
+        <p><strong>Submitted:</strong> ${submissionDate}</p>
+        <p><strong>Payment Status:</strong> ✅ Confirmed</p>
+    </div>
+    <div style="padding: 15px; text-align: center; color: #888; font-size: 12px; background: #f9f9f9;">
+        <p>This email was sent from the Second Opinion Request System.</p>
+    </div>
+</div>
+`;
+
+        // Prepare attachments for Resend
+        let attachments = [];
+        if (files.length > 0) {
+            for (const file of files) {
+                try {
+                    const fileContent = fs.readFileSync(file.path);
+                    const base64Content = fileContent.toString('base64');
+                    
+                    attachments.push({
+                        filename: file.originalname,
+                        content: base64Content
+                    });
+                } catch (fileError) {
+                    console.error('Error reading file:', file.originalname, fileError);
+                }
+            }
+        }
+
+        // Send email to Dr Prathyusha with attachments
+        const { data, error } = await resend.emails.send({
+            from: 'onboarding@resend.dev',
+            to: ['prathyusha23@gmail.com'],
+            subject: `New Second Opinion Request - ${formData.fullName} (Payment Confirmed)`,
+            html: emailContent,
+            attachments: attachments
+        });
+
+        if (error) {
+            console.error('Error sending email:', error);
+            return res.status(500).json({ error: 'Failed to send email', details: error });
+        }
+
+        console.log('Email sent successfully:', data);
+
+        // Clean up uploaded files after sending email
+        files.forEach(file => {
+            fs.unlink(file.path, (err) => {
+                if (err) console.error('Error deleting file:', err);
+            });
+        });
+
+        // Remove from temporary storage
+        tempFormStorage.delete(tempSubmissionId);
+
+        res.json({ 
+            success: true, 
+            message: 'Second opinion request submitted successfully',
+            submissionId: submissionId,
+            patientEmail: formData.email,
+            patientPhone: formData.phone
+        });
+
+    } catch (error) {
+        console.error('Error processing stored form data:', error);
+        res.status(500).json({ error: 'Internal server error', details: error.message });
+    }
+});
+
 // Start server
 app.listen(PORT, () => {
     console.log(`\n🏥 Email Server (using Resend) running on http://localhost:${PORT}`);
