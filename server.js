@@ -271,7 +271,7 @@ app.post('/api/appointment', async (req, res) => {
         // Get hospital details based on selection
         let hospitalDetails = '';
         if (appointmentData.hospital === 'infantry-road') {
-            hospitalDetails = 'Sparsh Hospital, Infantry Road (080 6122 2000) - Monday to Saturday: 3:00 PM - 4:00 PM';
+            hospitalDetails = 'Sparsh Hospital, Infantry Road (080 6122 2000) - Monday to Saturday: 10:30 AM - 4:00 PM';
         }
 
         // Format appointment data for email
