@@ -270,9 +270,7 @@ app.post('/api/appointment', async (req, res) => {
 
         // Get hospital details based on selection
         let hospitalDetails = '';
-        if (appointmentData.hospital === 'rr-nagar') {
-            hospitalDetails = 'Sparsh Hospital, RR Nagar (080676 66766) - Monday to Saturday: 10:00 AM - 2:00 PM';
-        } else if (appointmentData.hospital === 'infantry-road') {
+        if (appointmentData.hospital === 'infantry-road') {
             hospitalDetails = 'Sparsh Hospital, Infantry Road (080 6122 2000) - Monday to Saturday: 3:00 PM - 4:00 PM';
         }
 
@@ -338,7 +336,7 @@ app.post('/api/appointment', async (req, res) => {
         const { data, error } = await resend.emails.send({
             from: 'onboarding@resend.dev',
             to: ['prathyusha23@gmail.com'],
-            subject: `New Appointment Request - ${appointmentData.name} at ${appointmentData.hospital === 'rr-nagar' ? 'RR Nagar' : 'Infantry Road'}`,
+            subject: `New Appointment Request - ${appointmentData.name} at Infantry Road`,
             html: emailContent
         });
 
