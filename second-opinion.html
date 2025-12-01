@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#007AFF">
+    <meta name="theme-color" content="#9B7EBD">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Dr Prathyusha">
@@ -36,7 +36,7 @@
         }
         .checkbox-group label {
             font-size: 1rem;
-            color: #222;
+            color: #2C2C2C;
             cursor: pointer;
             vertical-align: middle;
             line-height: 1.5;
@@ -191,24 +191,27 @@
 
                     <!-- QR Code Payment Section -->
                     <div class="form-section" id="qrCodeSection" style="display: none;">
-                        <h3><i class="fas fa-qrcode"></i> Payment via QR Code</h3>
-                        <div class="qr-payment-container">
-                            <div class="qr-info">
-                                <p><strong>Amount to Pay:</strong> ₹1,999</p>
-                                <p><strong>Payment Method:</strong> Scan QR Code with GPay/PhonePe/Paytm</p>
-                                <p><strong>Instructions:</strong></p>
-                                <ol>
-                                    <li>Open your payment app (GPay, PhonePe, Paytm, etc.)</li>
-                                    <li>Tap on "Scan QR Code"</li>
-                                    <li>Scan the QR code below</li>
-                                    <li>Enter amount: ₹1,999</li>
-                                    <li>Complete the payment</li>
+                        <h3><i class="fas fa-qrcode"></i> Complete Payment - ₹1,999</h3>
+                        <div class="qr-payment-container" style="background: #F8F9FA; padding: 2rem; border-radius: 12px; border: 2px solid #E9ECEF;">
+                            <div class="qr-info" style="margin-bottom: 1.5rem;">
+                                <p style="font-size: 1.1rem; font-weight: 600; color: #2C2C2C; margin-bottom: 1rem;">
+                                    <i class="fas fa-info-circle" style="color: #9B7EBD;"></i> Simple 3-Step Payment Process
+                                </p>
+                                <ol style="font-size: 1rem; line-height: 1.8; color: #2C2C2C; padding-left: 1.5rem;">
+                                    <li><strong>Scan the QR code</strong> below with GPay, PhonePe, Paytm, or any UPI app</li>
+                                    <li><strong>Pay ₹1,999</strong> and take a screenshot of the payment confirmation</li>
+                                    <li><strong>Click Submit</strong> and send the payment screenshot via WhatsApp (button available on this page)</li>
                                 </ol>
                             </div>
-                            <div class="qr-code-container">
+                            <div class="qr-code-container" style="text-align: center;">
                                 <div class="qr-code-image">
-                                    <img src="gpay QR code.jpg" alt="GPay QR Code" style="max-width: 250px; width: 100%; border: 2px solid #eee; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 10px;" />
-                                    <p style="font-size: 0.95rem; color: #333; margin-top: 0.5rem;">Scan this QR code with your payment app to pay ₹1,999 directly to Dr Prathyusha's HDFC account.</p>
+                                    <img src="gpay QR code.jpg" alt="Payment QR Code" style="max-width: 280px; width: 100%; border: 3px solid #9B7EBD; border-radius: 16px; box-shadow: 0 4px 12px rgba(155, 126, 189, 0.2); margin-bottom: 1rem;" />
+                                    <p style="font-size: 1rem; font-weight: 600; color: #4A90E2; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-mobile-alt"></i> Scan with Any UPI App
+                                    </p>
+                                    <p style="font-size: 0.9rem; color: #4A4A4A;">
+                                        Payment goes directly to Dr Prathyusha's verified HDFC account
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -287,6 +290,11 @@
             </div>
         </div>
     </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/919963714469" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <script src="script.js"></script>
     <script src="second-opinion.js"></script>
