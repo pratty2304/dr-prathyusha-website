@@ -557,8 +557,7 @@ if (window.location.pathname.endsWith('index.html') || window.location.pathname 
         var calendlyContainer = document.getElementById('calendly-embed-container');
         var calendlyScriptId = 'calendly-widget-script';
         var calendlyWidgets = {
-            'rr-nagar': 'https://calendly.com/prathyusha23/rr-nagar-appointment?hide_event_type_details=1&hide_gdpr_banner=1',
-            'infantry-road': 'https://calendly.com/prathyusha23/infantry-road-appointment?hide_event_type_details=1&hide_gdpr_banner=1'
+            'kims-mahadevapura': 'https://calendly.com/prathyusha23/kims-mahadevapura-appointment?hide_event_type_details=1&hide_gdpr_banner=1'
         };
         if (hospitalSelect && calendlyContainer) {
             hospitalSelect.addEventListener('change', function() {
